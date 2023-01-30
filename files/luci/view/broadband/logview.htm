@@ -26,6 +26,8 @@
 			<div style="text-align:right"><small><%:Auto Refresh%></small></div>
 		</fieldset>
 	</fieldset>
+	<br/>
+	<a href="https://github.com/DH-FU/luci-app-broadbandacc/issues"><%:Thank you for using this software, BUG feedback:https://github.com/DH-FU/luci-app-broadbandacc/issues%></a>
 </div>
 
 <script type="text/javascript" src="<%=resource%>/cbi.js"></script>
@@ -36,7 +38,7 @@
 			log_id.innerHTML = String.format(
 				'<pre>%s%s%s%s</pre>',
 				'<span class="description"><strong><%:importantlog:%></strong></span><br/>',
-				'<%:During the valid acceleration period, the local dial-up can be used to speed up the network without interruption. If you use any other form to connect to the network, there may be a maximum speed increase failure of 10 minutes when the dial-up ip of the main router changes.%><br/><%:Example: The operator may automatically close the pppoe channel every week, and the router’s re-dial will cause the ip to change. Using local dial-up can speed up without interruption, and using other forms of networking will cause a maximum speed-up failure of 10 minutes within a week.%><br/><%:Thank you for using this software, BUG feedback:https://github.com/DH-FU/luci-app-broadbandacc/issues%>',
+				'<%:During the valid acceleration period, the local dial-up can be used to speed up the network without interruption. If you use any other form to connect to the network, there may be a maximum speed increase failure of 10 minutes when the dial-up ip of the main router changes.%><br/><%:Example: The operator may automatically close the pppoe channel every week, and the router’s re-dial will cause the ip to change. Using local dial-up can speed up without interruption, and using other forms of networking will cause a maximum speed-up failure of 10 minutes within a week.%><br/>',
 				'<br/><span class="description"><strong><%:log file:%></strong></span><br/>',
 				data.client || '<%:No log data.%>'
 			);
