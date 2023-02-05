@@ -178,7 +178,7 @@ isp_bandwidth() {
 		local outmsg="一类上行提速成功，带宽已提升到 $(expr $_targetUpH / 1024)M"; _log "$outmsg" $(( 1 | 2 * 8 ))
 		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
 	else
-		local outmsg="未开通"; _log "$outmsg" $(( 1 | 2 * 8 | 32 ))
+		local outmsg="上行未开通"; _log "$outmsg" $(( 1 | 2 * 8 | 32 ))
 		[ $1 -eq 1 ] && down_acc=0 || up_acc=0
 	fi
 			
@@ -187,7 +187,7 @@ isp_bandwidth() {
 		local outmsg="下行提速成功，带宽已提升到 $(expr $_targetDown / 1024)M"; _log "$outmsg" $(( 1 | 1 * 8 ))
 		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
 	else
-		local outmsg="未开通"; _log "$outmsg" $(( 1 | 1 * 8 | 32 ))
+		local outmsg="下行未开通"; _log "$outmsg" $(( 1 | 1 * 8 | 32 ))
 		[ $1 -eq 1 ] && down_acc=0 || up_acc=0
 	fi
 			
