@@ -7,7 +7,8 @@ function index()
 	
 	entry({"admin", "services", "broadband"}, alias("admin", "services", "broadband", "general"), _("Broadband"), 90).dependent = true
 	entry({"admin", "services", "broadband", "general"}, cbi("broadband"), _("Settings"), 1).leaf = true
-	entry({"admin", "services", "broadband", "log"}, template("broadband/logview"), _("Log"), 2).leaf = true
+	entry({"admin", "services", "broadband", "shop"}, template("broadband/shopview"), _("Shop"), 2).leaf = true
+	entry({"admin", "services", "broadband", "log"}, template("broadband/logview"), _("Log"), 3).leaf = true
 	entry({"admin", "services", "broadband", "status"}, call("action_status")).leaf = true
 	entry({"admin", "services", "broadband", "logdata"}, call("action_log")).leaf = true	
 end
