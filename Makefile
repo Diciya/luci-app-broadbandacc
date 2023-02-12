@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-broadbandacc
-PKG_VERSION:=1.3-s
+PKG_VERSION:=1.4-s
 PKG_RELEASE:=1
 
 PKG_MAINTAINER:=NaNa <484154383@qq.com>
@@ -64,6 +64,7 @@ define Package/luci-app-broadbandacc/install
 	$(INSTALL_DATA) ./files/luci/model/cbi/broadband.lua $(1)/usr/lib/lua/luci/model/cbi/broadband.lua
 	$(INSTALL_DATA) ./files/luci/view/broadband/status.htm $(1)/usr/lib/lua/luci/view/broadband/status.htm
 	$(INSTALL_DATA) ./files/luci/view/broadband/logview.htm $(1)/usr/lib/lua/luci/view/broadband/logview.htm
+	$(INSTALL_DATA) ./files/luci/view/broadband/shopview.htm $(1)/usr/lib/lua/luci/view/broadband/shopview.htm
 	$(INSTALL_DATA) ./files/luci/i18n/broadband_zh-cn.lmo $(1)/usr/lib/lua/luci/i18n/broadband.zh-cn.lmo
 	$(INSTALL_BIN) ./files/root/usr/bin/broadband.sh $(1)/usr/bin/broadband.sh
 	$(INSTALL_BIN) ./files/root/usr/share/rpcd/acl.d/luci-app-broadband.json $(1)/usr/share/rpcd/acl.d/luci-app-broadband.json
