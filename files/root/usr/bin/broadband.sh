@@ -171,11 +171,11 @@ isp_bandwidth() {
 		
 	if [ $_up100ExpireT != "false" -a $_up100ExpireT -gt $cur_sec ]; then
 		#二类上行提速
-		local outmsg="二类上行提速成功，带宽已提升到 $(expr $_targetUp100 / 1024)M"; _log "$outmsg" $(( 1 | 2 * 8 ))
+		local outmsg="二类上行提速成功，带宽已提升至 $(expr $_targetUp100 / 1024)M"; _log "$outmsg" $(( 1 | 2 * 8 ))
 		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
 	elif [ $_upHExpireT != "false" -a $_upHExpireT -gt $cur_sec ]; then
 		#一类上行提速
-		local outmsg="一类上行提速成功，带宽已提升到 $(expr $_targetUpH / 1024)M"; _log "$outmsg" $(( 1 | 2 * 8 ))
+		local outmsg="一类上行提速成功，带宽已提升至 $(expr $_targetUpH / 1024)M"; _log "$outmsg" $(( 1 | 2 * 8 ))
 		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
 	else
 		local outmsg="上行未开通"; _log "$outmsg" $(( 1 | 2 * 8 | 32 ))
@@ -184,7 +184,7 @@ isp_bandwidth() {
 			
 	if [ $_downExpireT != "false" -a $_downExpireT -gt $cur_sec ]; then
 		#下行提速
-		local outmsg="下行提速成功，带宽已提升到 $(expr $_targetDown / 1024)M"; _log "$outmsg" $(( 1 | 1 * 8 ))
+		local outmsg="下行提速成功，带宽已提升至 $(expr $_targetDown / 1024)M"; _log "$outmsg" $(( 1 | 1 * 8 ))
 		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
 	else
 		local outmsg="下行未开通"; _log "$outmsg" $(( 1 | 1 * 8 | 32 ))
