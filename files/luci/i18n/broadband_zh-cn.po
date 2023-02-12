@@ -16,6 +16,9 @@ msgstr "网络提速服务由测速网提供,具有上行与下行提速功能�
 msgid "Settings"
 msgstr "设置"
 
+msgid "Shop"
+msgstr "商店"
+
 msgid "Log"
 msgstr "日志"
 
