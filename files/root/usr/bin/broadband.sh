@@ -207,6 +207,7 @@ _start_Strategy() {
 	     exit $flag
 	fi
 }
+
 # 发送提速心跳信号
 _keepalive() {
 	#_publicnet_ip=x.x.x.x
@@ -274,12 +275,14 @@ _keepalive() {
 	_keepalive
 	fi
 }
+
 #7天自检
 Weekly_cycle() {
 	while : ; do
 	sleep 7d && isp_bandwidth && _log "运行一周，自检提速修复..."
 	done 
 }
+
 # 停止加速
 broadband_logout() {
 	local _interface=$(uci get "broadband.general.network" 2> /dev/null)
@@ -324,7 +327,7 @@ broadband_init() {
 	[ $logging -eq 0 ] && cat /dev/null > $LOGFILE
 	[ $logging -eq 1 ] && [ ! -d /var/log ] && mkdir -p /var/log
 	[ -f "$LOGFILE" ] && _log "------------------------------"
-	_log "宽带助手启动中..."
+	_log "宽带助手正在启动..."
 
 	# 检查外部调用工具
 	command -v wget-ssl >/dev/null || { _log "GNU Wget 未安装,尝试安装中...请重启插件"; opkg update; opkg install wget; return 3; }
