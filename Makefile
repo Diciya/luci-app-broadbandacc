@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-broadbandacc
-PKG_VERSION:=1.4-s
+PKG_VERSION:=1.5-s
 PKG_RELEASE:=1
 
 PKG_MAINTAINER:=NaNa <484154383@qq.com>
