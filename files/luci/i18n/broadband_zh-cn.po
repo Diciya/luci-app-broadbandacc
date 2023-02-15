@@ -22,8 +22,8 @@ msgstr "商店"
 msgid "Log"
 msgstr "日志"
 
-msgid "Running Status"
-msgstr "运行状态"
+msgid "Speed Status"
+msgstr "提速状态"
 
 msgid "broadband assistant Running Status"
 msgstr "助手运行状态"
