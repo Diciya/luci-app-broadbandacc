@@ -91,8 +91,8 @@ msgstr "使用本机拨号且在加速有效期间内，使用此插件可以无
 msgid "Example: The operator may automatically close the pppoe channel every week, and the router’s re-dial will cause the ip to change. Using local dial-up can speed up without interruption, and using other forms of networking will cause a maximum speed-up failure of 10 minutes within a week."
 msgstr "例：运营商每一周可能自动关闭pppoe通道，路由器重新拨号会导致ip变化，使用本机拨号可以无间断加速，使用其他形式联网则一周内发生最大10分钟提速失效。"
 
-msgid "Thank you for using this software, BUG feedback:https://github.com/DH-FU/luci-app-broadbandacc/issues"
-msgstr "感谢使用本软件，BUG反馈:https://github.com/DH-FU/luci-app-broadbandacc/issues"
+msgid "Thank you for using this software, BUG feedback:https://github.com/DH-FU/luci-app-broadbandacc"
+msgstr "感谢使用本软件，BUG反馈:https://github.com/DH-FU/luci-app-broadbandacc"
 
 msgid "Error get log data."
 msgstr "获取日志数据失败。"
