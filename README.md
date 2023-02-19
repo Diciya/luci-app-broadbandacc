@@ -6,3 +6,6 @@
 <br/>多接口并行提速 --新建
 <br/>设备限速 --新建
 ![KA5 DR@L1 Z))2$1 N SI G](https://user-images.githubusercontent.com/76506087/218954542-9d2ea662-ed96-44f4-a70e-5fd11b52bdfa.png)
+# 捐助
+如果此插件对你有帮助，可以捐赠我们，帮助我们开发更多更好的插件，感谢。
+![{{N9KLBAJCIG6@3NCI2{`)D](https://user-images.githubusercontent.com/76506087/219942308-5d618747-f222-4871-8fba-754f50cb07e1.png)
