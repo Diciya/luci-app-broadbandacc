@@ -1,4 +1,4 @@
-# luci-app-broadbandacc
+# OpenWrt宽带提速插件
 支持宽带无间隔提速。
 <br/>警告：插件内置提速服务和商店均为第三方。
 <br/>插件功能
