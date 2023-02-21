@@ -330,7 +330,8 @@ broadband_init() {
 	_log "宽带助手正在启动..."
 
 	# 检查外部调用工具
-	command -v wget-ssl >/dev/null || { opkg update; opkg install wget-ssl; _log "GNU Wget 未安装,尝试安装中...请重启插件"; return 3; }
+	command -v wget-ssl >/dev/null || { opkg update; opkg install wget-ssl; _log "GNU Wget-ssl 未安装,尝试安装中..."; }
+	command -v wget-ssl >/dev/null || { _log "GNU Wget-ssl 安装失败，尝试其他版本或反馈作者修复"; return 3; }
 
 	# 捕获中止信号
 	trap 'sigterm' INT # Ctrl-C
