@@ -12,7 +12,7 @@
 2.  opkg install 插件 --安装插件命令
 # 插件下载
 <br/>wget-ssl版与curl版，安装此插件需对应命令提前安装。
-<br/>https://github.com/DH-FU/luci-app-broadbandacc/releases
+<br/>https://github.com/Diciya/luci-app-broadbandacc/releases
 # 页面展示
 ![KA5 DR@L1 Z))2$1 N SI G](https://user-images.githubusercontent.com/76506087/218954542-9d2ea662-ed96-44f4-a70e-5fd11b52bdfa.png)
 # 捐助
