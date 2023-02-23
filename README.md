@@ -9,8 +9,9 @@
 # 🔩软件架构
 支持OpenWrt在维护的所有架构
 # 📋安装教程
-1.  opkg update --更新软件包
-2.  opkg install 插件 --安装插件命令
+1.  将安装包上传至/tmp
+2.  opkg update --更新软件包
+3.  opkg install 插件 --安装插件命令
 # 👇插件下载
 wget-ssl版与curl版，安装此插件需对应命令提前安装。
 <br/><a href="https://github.com/Diciya/luci-app-broadbandacc/releases">历史版本下载</a>
