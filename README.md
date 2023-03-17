@@ -17,7 +17,7 @@
 wget-ssl版与curl版，安装此插件需对应命令提前安装。
 <br/><a href="https://github.com/Diciya/luci-app-broadbandacc/releases">历史版本下载</a>
 # 🕸页面展示
-![KA5 DR@L1 Z))2$1 N SI G](https://user-images.githubusercontent.com/76506087/218954542-9d2ea662-ed96-44f4-a70e-5fd11b52bdfa.png)
+![218954542-9d2ea662-ed96-44f4-a70e-5fd11b52bdfa](https://user-images.githubusercontent.com/76506087/225793869-3ec43279-4a9a-4853-9951-73145a5fcba8.png)
 # 🤝捐助
 如果此插件对你有帮助，可以捐赠我们，帮助我们开发更多更好的插件，感谢。
 ![{{N9KLBAJCIG6@3NCI2{`)D](https://user-images.githubusercontent.com/76506087/219942308-5d618747-f222-4871-8fba-754f50cb07e1.png)
