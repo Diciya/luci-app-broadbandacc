@@ -108,7 +108,7 @@ isp_bandwidth() {
 	elif [ $_code -eq 0 ]; then
 	_log "服务接口连接正常"
 	else
-	_log "网络异常，请重启插件"
+	_log "网络异常，尝试修复..."
 	return 1
 	fi
 	
