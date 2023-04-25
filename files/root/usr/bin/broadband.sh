@@ -109,7 +109,7 @@ isp_bandwidth() {
 	_log "服务接口连接正常"
 	else
 	_log "网络异常，请重启插件"
-	return 2
+	return 1
 	fi
 	
 	json_cleanup; json_load "$(wget-ssl -q -O - $_http_cmd --bind-address=$_bind_ip)"
