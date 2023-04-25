@@ -102,12 +102,14 @@ isp_bandwidth() {
 	
 	if [ $_code -eq 10021 ]; then
 	_log "请求接口异常，请重启插件再试"
+	return 1
 	elif [ $_code -eq 10002 ]; then
 	_log "操作过于频繁，接口提速已受理"
 	elif [ $_code -eq 0 ]; then
 	_log "服务接口连接正常"
 	else
 	_log "网络异常，请重启插件"
+	return 2
 	fi
 	
 	json_cleanup; json_load "$(wget-ssl -q -O - $_http_cmd --bind-address=$_bind_ip)"
