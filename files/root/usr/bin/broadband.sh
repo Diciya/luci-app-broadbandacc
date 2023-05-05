@@ -309,7 +309,7 @@ broadband_init() {
 	touch /var/lock/broadband.lock
 	#系统准备，校准time
 	sleep 5
-	ntpd 2.cn.pool.ntp.org
+	ntpd -S -d -p cn.pool.ntp.org
 	# 读取设置
 	readonly NAME=broadband
 	readonly LOGFILE=/var/log/${NAME}.log
