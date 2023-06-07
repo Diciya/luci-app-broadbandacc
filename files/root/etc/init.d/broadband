@@ -12,7 +12,7 @@ start() {
 		[ $retry -ge 10 ] && return 1 || let retry++
 		sleep 1
 	done
-	rm -f /var/lock/broadband.lock
+	rm -f /var/lock/${NAME}.lock
 
 	config_load "$NAME"
 	config_get_bool enabled "general" "enabled" 0
@@ -26,10 +26,10 @@ start() {
 }
 
 stop() {
-	ps | grep broadband.sh | grep -v 'grep' >/dev/null 2>&1 || return 1
+	ps | grep ${NAME}.sh | grep -v 'grep' >/dev/null 2>&1 || return 1
 
 	local pid spid
-	for pid in $(ps | grep broadband.sh | grep -v 'grep' | awk '{print $1}'); do
+	for pid in $(ps | grep ${NAME}.sh | grep -v 'grep' | awk '{print $1}'); do
 		echo "Stop broadband process PID: $pid"
 		kill $pid >/dev/null 2>&1
 		for spid in $(pgrep -P $pid "sleep"); do
@@ -37,13 +37,15 @@ stop() {
 			kill $spid >/dev/null 2>&1
 		done
 	done
-	rm -f /var/lock/broadband.lock
+	rm -f /var/lock/${NAME}.lock
+	rm -f /var/state/${NAME}_down_state
+	rm -f /var/state/${NAME}_up_state
 	logger -p "daemon.notice" -t "$NAME" "broadband has stoped."
 	return 0
 }
 
 restart() {
-  rm -rf /tmp/state/broadband*
+  rm -rf /tmp/state/${NAME}*
 	stop && sleep 1
 	start
 }
