@@ -337,9 +337,9 @@ broadband_init() {
 	command -v wget-ssl >/dev/null || { _log "GNU Wget-ssl 安装失败，尝试其他版本或反馈作者修复"; return 3; }
 
 	# 捕获中止信号
-	trap 'sigterm' INT # Ctrl-C
-	trap 'sigterm' QUIT # Ctrl-\
-	trap 'sigterm' TERM # kill
+	#trap 'sigterm' INT # Ctrl-C
+	#trap 'sigterm' QUIT # Ctrl-\
+	#trap 'sigterm' TERM # kill
 
 	# 状态初始化
 	clean_log
