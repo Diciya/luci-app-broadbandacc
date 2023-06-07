@@ -14,7 +14,9 @@
 2.  opkg update --更新软件包
 3.  opkg install 插件 --安装插件命令
 # 👇插件下载
-wget-ssl版与curl版，安装此插件需对应命令提前安装。
+新增适用于21.02以上系统的插件
+<br/>目前有lede版与openwrt版
+<br/>lede版插件在OpenWrt21.02以上系统无法使用，但openwrt版两个都适用。
 <br/><a href="https://github.com/Diciya/luci-app-broadbandacc/releases">历史版本下载</a>
 # 🕸页面展示
 ![218954542-9d2ea662-ed96-44f4-a70e-5fd11b52bdfa](https://user-images.githubusercontent.com/76506087/225793869-3ec43279-4a9a-4853-9951-73145a5fcba8.png)
