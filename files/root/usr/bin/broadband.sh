@@ -31,30 +31,35 @@ uci_get_by_bool(){
 
 # 日志和状态栏输出。1 日志文件, 2 系统日志, 4 详细模式, 8 下行状态栏, 16 上行状态栏, 32 失败状态
 _log() {
-	local msg=$1 flag=$2 timestamp=$(date +'%Y/%m/%d %H:%M:%S')
-	[ -z "$msg" ] && return
-	[ -z "$flag" ] && flag=1
-
-	[ $logging -eq 0 -a $(( $flag & 1 )) -ne 0 ] && flag=$(( $flag ^ 1 ))
-	if [ $verbose -eq 0 -a $(( $flag & 4 )) -ne 0 ]; then
-		[ $(( $flag & 1 )) -ne 0 ] && flag=$(( $flag ^ 1 ))
-		[ $(( $flag & 2 )) -ne 0 ] && flag=$(( $flag ^ 2 ))
-	fi
-	if [ $down_acc -eq 0 -a $(( $flag & 8 )) -ne 0 ]; then
-		flag=$(( $flag ^ 8 ))
-		[ $up_acc -ne 0 ] && flag=$(( $flag | 16 ))
-	fi
-	if [ $up_acc -eq 0 -a $(( $flag & 16 )) -ne 0 ]; then
-		flag=$(( $flag ^ 16 ))
-		[ $down_acc -ne 0 ] && flag=$(( $flag | 8 ))
-	fi
-
-	[ $(( $flag & 1 )) -ne 0 ] && echo "$timestamp $msg" >> $LOGFILE 2> /dev/null
-	[ $(( $flag & 2 )) -ne 0 ] && logger -p "daemon.info" -t "$NAME" "$msg"
-
-	[ $(( $flag & 32 )) -eq 0 ] && local color="green" || local color="red"
-	[ $(( $flag & 8 )) -ne 0 ] && echo -n "<font color=$color>$timestamp $msg</font>" > $down_state_file 2> /dev/null
-	[ $(( $flag & 16 )) -ne 0 ] && echo -n "<font color=$color>$timestamp $msg</font>" > $up_state_file 2> /dev/null
+    local msg=$1 flag=${2:-1} timestamp=$(date +'%Y/%m/%d %H:%M:%S')
+    [ -z "$msg" ] && return
+    [ -z "$flag" ] && flag=1
+    [ "$logging" = "0" -a "$(($flag & 1))" -ne 0 ] && flag=$(($flag ^ 1))
+    if [ "$verbose" = "0" -a "$(($flag & 4))" -ne 0 ]; then
+        [ "$(($flag & 1))" -ne 0 ] && flag=$(($flag ^ 1))
+        [ "$(($flag & 2))" -ne 0 ] && flag=$(($flag ^ 2))
+    fi
+    if [ "$down_acc" = "0" -a "$(($flag & 8))" -ne 0 ]; then
+        flag=$(($flag ^ 8))
+        [ "$up_acc" != "0" ] && flag=$(($flag | 16))
+    fi
+    if [ "$up_acc" = "0" -a "$(($flag & 16))" -ne 0 ]; then
+        flag=$(($flag ^ 16))
+        [ "$down_acc" != "0" ] && flag=$(($flag | 8))
+    fi
+    [ "$(($flag & 1))" -ne 0 ] && echo "$timestamp $msg" >> $LOGFILE 2> /dev/null
+    [ "$(($flag & 2))" -ne 0 ] && logger -s -p "daemon.info" -t "$NAME" "$msg"
+    if [ "$(($flag & 32))" -eq 0 ]; then
+        color="green"
+    else
+        color="red"
+    fi
+    if [ "$(($flag & 8))" -ne 0 ]; then
+        echo -n "<font color=$color>$timestamp $msg</font>" > $down_state_file 2> /dev/null
+    fi
+    if [ "$(($flag & 16))" -ne 0 ]; then
+        echo -n "<font color=$color>$timestamp $msg</font>" > $up_state_file 2> /dev/null
+    fi
 }
 
 # 清理日志
@@ -99,8 +104,7 @@ isp_bandwidth() {
 	json_cleanup; json_load "$(wget-ssl -q -O - $_http_cmd2 --bind-address=$_bind_ip)"
 	local _code
 	json_get_var _code "code"
-	
-	if [ $_code -eq 10021 ]; then
+ 	if [ $_code -eq 10021 ]; then
 	_log "请求接口异常，请重启插件再试"
 	return 1
 	elif [ $_code -eq 10002 ]; then
@@ -111,15 +115,13 @@ isp_bandwidth() {
 	_log "网络异常，尝试修复..."
 	return 1
 	fi
-	
-	json_cleanup; json_load "$(wget-ssl -q -O - $_http_cmd --bind-address=$_bind_ip)"
+ 	json_cleanup; json_load "$(wget-ssl -q -O - $_http_cmd --bind-address=$_bind_ip)"
 	#无法提速
 	json_select "data"
 	json_select "indexInfo"
 	local _canSpeed
 	json_get_var _canSpeed "canSpeed"
-	
-	if [ -z $_canSpeed ]; then
+ 	if [ -z $_canSpeed ]; then
 		 _log "网络不稳定"
 		 rm -f "$down_state_file" "$up_state_file"
 		 return 1
@@ -133,32 +135,27 @@ isp_bandwidth() {
 		local _ip
 		json_get_var _ip "ip"
 		_log "出口IP地址: $_ip" $(( 1 | 1 * 4 ))
-			
-		local _dialAcct
+ 		local _dialAcct
 		json_get_var _dialAcct "dialAcct"
 		_log "宽带: $_dialAcct" $(( 1 | 1 * 4 ))
-			
-		local _updatedAt
+ 		local _updatedAt
 		json_get_var _updatedAt "updatedAt"
 		_log "提速开始时间: $_updatedAt" $(( 1 | 1 * 4 ))
-			
-		local _targetUpH
+ 		local _targetUpH
 		json_get_var _targetUpH "targetUpH"			
 		local _upHExpire
 		json_get_var _upHExpire "upHExpire"
-		_log "一类上行带宽$(expr $_targetUpH / 1024)M提速截至时间: $_upHExpire" $(( 1 | 1 * 4 ))
-
-		local _targetUp100
+		_log "一类上行带宽$(($_targetUpH / 1024))M提速截至时间: $_upHExpire" $(( 1 | 1 * 4 ))
+ 		local _targetUp100
 		json_get_var _targetUp100 "targetUp100"			
 		local _up100Expire
 		json_get_var _up100Expire "up100Expire"
-		_log "二类上行带宽$(expr $_targetUp100 / 1024)M提速截至时间: $_up100Expire" $(( 1 | 1 * 4 ))
-			
-		local _targetDown
+		_log "二类上行带宽$(($_targetUp100 / 1024))M提速截至时间: $_up100Expire" $(( 1 | 1 * 4 ))
+ 		local _targetDown
 		json_get_var _targetDown "targetDown"	
 		local _downExpire
 		json_get_var _downExpire "downExpire"
-		_log "下行带宽$(expr $_targetDown / 1024)M提速截至时间: $_downExpire" $(( 1 | 1 * 4 ))
+		_log "下行带宽$(($_targetDown / 1024))M提速截至时间: $_downExpire" $(( 1 | 1 * 4 ))
 		#50
 		local _upHExpireT
 		json_get_var _upHExpireT "upHExpireT"
@@ -170,30 +167,27 @@ isp_bandwidth() {
 		json_get_var _downExpireT "downExpireT"
 		#time
 		local cur_sec=`date '+%s'`
-		
-	if [ $_up100ExpireT != "false" -a $_up100ExpireT -gt $cur_sec ]; then
+ 	if [ $_up100ExpireT != "false" -a $_up100ExpireT -gt $cur_sec ]; then
 		#二类上行提速
-		local outmsg="二类上行提速成功，带宽已提升至 $(expr $_targetUp100 / 1024)M"; _log "$outmsg" $(( 1 | 2 * 8 ))
+		local outmsg="二类上行提速成功，带宽已提升至 $(($_targetUp100 / 1024))M"; _log "$outmsg" $(( 1 | 2 * 8 ))
 		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
 	elif [ $_upHExpireT != "false" -a $_upHExpireT -gt $cur_sec ]; then
 		#一类上行提速
-		local outmsg="一类上行提速成功，带宽已提升至 $(expr $_targetUpH / 1024)M"; _log "$outmsg" $(( 1 | 2 * 8 ))
+		local outmsg="一类上行提速成功，带宽已提升至 $(($_targetUpH / 1024))M"; _log "$outmsg" $(( 1 | 2 * 8 ))
 		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
 	else
 		local outmsg="上行未开通"; _log "$outmsg" $(( 1 | 2 * 8 | 32 ))
 		[ $1 -eq 1 ] && down_acc=0 || up_acc=0
 	fi
-			
-	if [ $_downExpireT != "false" -a $_downExpireT -gt $cur_sec ]; then
+ 	if [ $_downExpireT != "false" -a $_downExpireT -gt $cur_sec ]; then
 		#下行提速
-		local outmsg="下行提速成功，带宽已提升至 $(expr $_targetDown / 1024)M"; _log "$outmsg" $(( 1 | 1 * 8 ))
+		local outmsg="下行提速成功，带宽已提升至 $(($_targetDown / 1024))M"; _log "$outmsg" $(( 1 | 1 * 8 ))
 		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
 	else
 		local outmsg="下行未开通"; _log "$outmsg" $(( 1 | 1 * 8 | 32 ))
 		[ $1 -eq 1 ] && down_acc=0 || up_acc=0
 	fi
-			
-	fi 
+ 	fi 
 	return 3
 }
 
