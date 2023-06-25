@@ -276,6 +276,7 @@ _keepalive() {
 Weekly_cycle() {
 	while : ; do
 	sleep 7d && isp_bandwidth && _log "运行一周，自检提速修复..."
+ 	sleep 10
 	done 
 }
 
@@ -301,8 +302,7 @@ broadband_init() {
 	# 防止重复启动
 	[ -f /var/lock/broadband.lock ] && return 1
 	touch /var/lock/broadband.lock
-	#系统准备，校准time
-	ntpd -S -d -p cn.pool.ntp.org &
+	#系统准备
 	sleep 5
 	# 读取设置
 	readonly NAME=broadband
