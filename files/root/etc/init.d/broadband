@@ -31,11 +31,11 @@ stop() {
 	local pid spid
 	for pid in $(ps | grep ${NAME}.sh | grep -v 'grep' | awk '{print $1}'); do
 		echo "Stop broadband process PID: $pid"
-		kill $pid >/dev/null 2>&1
 		for spid in $(pgrep -P $pid "sleep"); do
-			echo "Stop broadband process SPID: $spid"
+			#echo "Stop broadband process SPID: $spid"
 			kill $spid >/dev/null 2>&1
 		done
+		kill $pid >/dev/null 2>&1
 	done
 	rm -f /var/lock/${NAME}.lock
 	rm -f /var/state/${NAME}_down_state
