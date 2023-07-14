@@ -34,33 +34,54 @@ _log() {
     local msg=$1 flag=${2:-1} timestamp=$(date +'%Y/%m/%d %H:%M:%S')
     [ -z "$msg" ] && return
     [ -z "$flag" ] && flag=1
-    [ "$logging" = "0" -a "$(($flag & 1))" -ne 0 ] && flag=$(($flag ^ 1))
-    if [ "$verbose" = "0" -a "$(($flag & 4))" -ne 0 ]; then
-        [ "$(($flag & 1))" -ne 0 ] && flag=$(($flag ^ 1))
-        [ "$(($flag & 2))" -ne 0 ] && flag=$(($flag ^ 2))
+
+    # 日志输出处理
+    if [ "$logging" = "0" ] && [ $((flag & 1)) -ne 0 ]; then
+        flag=$((flag ^ 1))
     fi
-    if [ "$down_acc" = "0" -a "$(($flag & 8))" -ne 0 ]; then
-        flag=$(($flag ^ 8))
-        [ "$up_acc" != "0" ] && flag=$(($flag | 16))
+
+    # 详细模式处理
+    if [ "$verbose" = "0" ] && [ $((flag & 4)) -ne 0 ]; then
+        flag=$((flag & ~3))
     fi
-    if [ "$up_acc" = "0" -a "$(($flag & 16))" -ne 0 ]; then
-        flag=$(($flag ^ 16))
-        [ "$down_acc" != "0" ] && flag=$(($flag | 8))
+
+    # 下载状态处理
+    if [ "$down_acc" = "0" ] && [ $((flag & 8)) -ne 0 ]; then
+        flag=$((flag ^ 8))
+        [ "$up_acc" != "0" ] && flag=$((flag | 16))
     fi
-    [ "$(($flag & 1))" -ne 0 ] && echo "$timestamp $msg" >> $LOGFILE 2> /dev/null
-    [ "$(($flag & 2))" -ne 0 ] && logger -s -p "daemon.info" -t "$NAME" "$msg"
-    if [ "$(($flag & 32))" -eq 0 ]; then
-        color="green"
-    else
+
+    # 上传状态处理
+    if [ "$up_acc" = "0" ] && [ $((flag & 16)) -ne 0 ]; then
+        flag=$((flag ^ 16))
+        [ "$down_acc" != "0" ] && flag=$((flag | 8))
+    fi
+
+    # 写入文件日志
+    if [ $((flag & 1)) -ne 0 ]; then
+        echo "$timestamp $msg" >> "$LOGFILE" 2> /dev/null
+    fi
+
+    # 系统日志记录
+    if [ $((flag & 2)) -ne 0 ]; then
+        logger -s -p "daemon.info" -t "$NAME" "$msg"
+    fi
+
+    # 状态文件处理
+    color="green"
+    if [ $((flag & 32)) -ne 0 ]; then
         color="red"
     fi
-    if [ "$(($flag & 8))" -ne 0 ]; then
-        echo -n "<font color=$color>$timestamp $msg</font>" > $down_state_file 2> /dev/null
+
+    if [ $((flag & 8)) -ne 0 ]; then
+        echo -n "<font color=$color>$timestamp $msg</font>" > "$down_state_file" 2> /dev/null
     fi
-    if [ "$(($flag & 16))" -ne 0 ]; then
-        echo -n "<font color=$color>$timestamp $msg</font>" > $up_state_file 2> /dev/null
+
+    if [ $((flag & 16)) -ne 0 ]; then
+        echo -n "<font color=$color>$timestamp $msg</font>" > "$up_state_file" 2> /dev/null
     fi
 }
+
 
 # 清理日志
 clean_log() {
@@ -131,42 +152,42 @@ isp_bandwidth() {
 		 return 2
 	else
 	#提速成功
-		json_select ..
-		local _ip
-		json_get_var _ip "ip"
-		_log "出口IP地址: $_ip" $(( 1 | 1 * 4 ))
- 		local _dialAcct
-		json_get_var _dialAcct "dialAcct"
-		_log "宽带: $_dialAcct" $(( 1 | 1 * 4 ))
- 		local _updatedAt
-		json_get_var _updatedAt "updatedAt"
-		_log "提速开始时间: $_updatedAt" $(( 1 | 1 * 4 ))
- 		local _targetUpH
-		json_get_var _targetUpH "targetUpH"			
-		local _upHExpire
-		json_get_var _upHExpire "upHExpire"
-		_log "一类上行带宽$(($_targetUpH / 1024))M提速截至时间: $_upHExpire" $(( 1 | 1 * 4 ))
- 		local _targetUp100
-		json_get_var _targetUp100 "targetUp100"			
-		local _up100Expire
-		json_get_var _up100Expire "up100Expire"
-		_log "二类上行带宽$(($_targetUp100 / 1024))M提速截至时间: $_up100Expire" $(( 1 | 1 * 4 ))
- 		local _targetDown
-		json_get_var _targetDown "targetDown"	
-		local _downExpire
-		json_get_var _downExpire "downExpire"
-		_log "下行带宽$(($_targetDown / 1024))M提速截至时间: $_downExpire" $(( 1 | 1 * 4 ))
-		#50
-		local _upHExpireT
-		json_get_var _upHExpireT "upHExpireT"
-		#100
-		local _up100ExpireT
-		json_get_var _up100ExpireT "up100ExpireT"
-		#500
-		local _downExpireT
-		json_get_var _downExpireT "downExpireT"
-		#time
-		local cur_sec=`date '+%s'`
+	json_select ..
+	local _ip
+	json_get_var _ip "ip"
+	_log "出口IP地址: $_ip" $(( 1 | 1 * 4 ))
+	local _dialAcct
+	json_get_var _dialAcct "dialAcct"
+	_log "宽带: $_dialAcct" $(( 1 | 1 * 4 ))
+	local _updatedAt
+	json_get_var _updatedAt "updatedAt"
+	_log "提速开始时间: $_updatedAt" $(( 1 | 1 * 4 ))
+	local _targetUpH
+	json_get_var _targetUpH "targetUpH"			
+	local _upHExpire
+	json_get_var _upHExpire "upHExpire"
+	_log "一类上行带宽$(($_targetUpH / 1024))M提速截至时间: $_upHExpire" $(( 1 | 1 * 4 ))
+	local _targetUp100
+	json_get_var _targetUp100 "targetUp100"			
+	local _up100Expire
+	json_get_var _up100Expire "up100Expire"
+	_log "二类上行带宽$(($_targetUp100 / 1024))M提速截至时间: $_up100Expire" $(( 1 | 1 * 4 ))
+	local _targetDown
+	json_get_var _targetDown "targetDown"	
+	local _downExpire
+	json_get_var _downExpire "downExpire"
+	_log "下行带宽$(($_targetDown / 1024))M提速截至时间: $_downExpire" $(( 1 | 1 * 4 ))
+	#50
+	local _upHExpireT
+	json_get_var _upHExpireT "upHExpireT"
+	#100
+	local _up100ExpireT
+	json_get_var _up100ExpireT "up100ExpireT"
+	#500
+	local _downExpireT
+	json_get_var _downExpireT "downExpireT"
+	#time
+	local cur_sec=`date '+%s'`
  	if [ $_up100ExpireT != "false" -a $_up100ExpireT -gt $cur_sec ]; then
 		#二类上行提速
 		local outmsg="二类上行提速成功，带宽已提升至 $(($_targetUp100 / 1024))M"; _log "$outmsg" $(( 1 | 2 * 8 ))
@@ -206,77 +227,63 @@ _start_Strategy() {
 
 # 发送提速心跳信号
 _keepalive() {
-	#_publicnet_ip=x.x.x.x
-	#_time=xx _time1
-	#_interface
-	#接口名称
-	network=$(uci get "broadband.general.network" 2> /dev/null)
-
-	#获取出口ip
-	json_cleanup; json_load "$(wget-ssl -q -O - $_http_cmd1)"
-	json_select "data"
-	json_get_var _publicnet_ip "ip"
-	#断网睡眠
-	if [ -z $_publicnet_ip ]; then
-	_log "网络断开！请检查接口是否断开"
-	rm -f "$down_state_file" "$up_state_file"
-	#长期断网心跳
-	while : ; do
-	     sleep 15
-	     isp_bandwidth
-	     if [ $? = 3 ]; then
-	     _publicnet_ip1=$_publicnet_ip
-	     break
-	     fi
-	done
-	return 2
-	fi
-	
-	#检测循环
-	if [ $_interface = "pppoe" ]; then
-	while true
-        do
-        _ip0=`ifconfig pppoe-$network | grep 'inet addr:' | grep -oE '([0-9]{1,3}.){3}.[0-9]{1,3}' | head -n 1`
-	if [ -z $_ip0 ]; then
-	_log "网络断开！请检查接口是否断开"
-	rm -f "$down_state_file" "$up_state_file"
-	break
-	elif [ $_ip0 != $_ip1 ]; then
-	get_bind_ip
-	isp_bandwidth
-	_ip1=$_ip0
-	fi
-        sleep 5        
-        done
-        return 1
-	
-	elif [ -n $_publicnet_ip -a -n $_publicnet_ip1 -a $_publicnet_ip != $_publicnet_ip1 ]; then
-	get_bind_ip
-	isp_bandwidth
-	_publicnet_ip1=$_publicnet_ip
-	return 1	
-	elif [ -n $_publicnet_ip -a -n $_publicnet_ip1 -a $_publicnet_ip = $_publicnet_ip1 ]; then
-	return 1
-
-	else
-	#ip1初始化
-	_publicnet_ip1=$_publicnet_ip
-	_ip0=`ifconfig pppoe-$network | grep 'inet addr:' | grep -oE '([0-9]{1,3}.){3}.[0-9]{1,3}' | head -n 1`
-	_ip1=$_ip0
-	json_cleanup; json_load "$(ubus call network.interface.$network status 2> /dev/null)" >/dev/null 2>&1
-	#接口类型
-	json_get_var _interface "proto"
-	#接口连接时间
-	#json_get_var _time "uptime"
-	_keepalive
-	fi
+  # 接口名称
+  network=$(uci -q get "broadband.general.network")
+   # 获取出口ip
+  _publicnet_ip=$(wget -qO- $_http_cmd1 | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}' | head -1)
+   # 断网睡眠
+  if [ -z "$_publicnet_ip" ]; then
+    _log "网络断开！请检查接口是否断开"
+    rm -f "$down_state_file" "$up_state_file"
+     # 长期断网心跳
+    while : ; do
+      sleep 15
+      isp_bandwidth
+      if [ $? -eq 3 ]; then
+        _publicnet_ip1=$_publicnet_ip
+        break
+      fi
+    done
+     return 2
+  fi
+   # 检测循环
+  if [ "$_interface" = "pppoe" ]; then
+    while true; do
+      _ip0=$(ifconfig pppoe-$network | grep 'inet addr:' | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | head -n 1)
+      if [ -z "$_ip0" ]; then
+        _log "网络断开！请检查接口是否断开"
+        rm -f "$down_state_file" "$up_state_file"
+        break
+      elif [ "$_ip0" != "$_ip1" ]; then
+        get_bind_ip
+        isp_bandwidth
+        _ip1=$_ip0
+      fi
+      sleep 5
+    done
+     return 1
+  elif [ -n "$_publicnet_ip" ] && [ -n "$_publicnet_ip1" ] && [ "$_publicnet_ip" != "$_publicnet_ip1" ]; then
+    get_bind_ip
+    isp_bandwidth
+    _publicnet_ip1=$_publicnet_ip
+    return 1
+  elif [ -n "$_publicnet_ip" ] && [ -n "$_publicnet_ip1" ] && [ "$_publicnet_ip" = "$_publicnet_ip1" ]; then
+    return 1
+  else
+    # 初始化变量
+    _publicnet_ip1=$_publicnet_ip
+    _ip0=$(ifconfig pppoe-$network | grep 'inet addr:' | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | head -n 1)
+    _ip1=$_ip0
+    _interface=$(ubus -S call network.interface.$network status | jsonfilter -e '@.proto')
+    _keepalive
+  fi
 }
 
 #7天自检
 Weekly_cycle() {
 	while : ; do
 	sleep 7d && isp_bandwidth && _log "运行一周，自检提速修复..."
- 	sleep 10
+	sleep 10
 	done 
 }
 
@@ -302,7 +309,7 @@ broadband_init() {
 	# 防止重复启动
 	[ -f /var/lock/broadband.lock ] && return 1
 	touch /var/lock/broadband.lock
-	#系统准备
+	#系统准备，校准time
 	sleep 5
 	# 读取设置
 	readonly NAME=broadband
@@ -345,23 +352,23 @@ broadband_init() {
 # 程序主体
 broadband_main() {
 
-		# 获取IP地址
-		get_bind_ip
-		gen_http_cmd
-		
-		# 获取带宽信息
-		isp_bandwidth
-		for i in 1 2 3; do
-		    _start_Strategy
-		done
-		# 七天循环
-		Weekly_cycle &
-		# 提速保持
-		while : ; do
-			clean_log # 清理日志
-			_keepalive
-			sleep ${keepalive}m
-		done
+	# 获取IP地址
+	get_bind_ip
+	gen_http_cmd
+	
+	# 获取带宽信息
+	isp_bandwidth
+	for i in 1 2 3; do
+		_start_Strategy
+	done
+	# 七天循环
+	Weekly_cycle &
+	# 提速保持
+	while : ; do
+		clean_log # 清理日志
+		_keepalive
+		sleep ${keepalive}m
+	done
 	broadband_logout
 	rm -f "$down_state_file" "$up_state_file"
 	_log "无法提速，宽带助手已停止。"
