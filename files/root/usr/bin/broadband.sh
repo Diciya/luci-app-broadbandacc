@@ -156,9 +156,9 @@ isp_bandwidth() {
 	local _ip
 	json_get_var _ip "ip"
 	_log "出口IP地址: $_ip" $(( 1 | 1 * 4 ))
-	local _dialAcct
-	json_get_var _dialAcct "dialAcct"
-	_log "宽带: $_dialAcct" $(( 1 | 1 * 4 ))
+	#local _dialAcct
+	#json_get_var _dialAcct "dialAcct"
+	#_log "宽带: $_dialAcct" $(( 1 | 1 * 4 ))
 	local _updatedAt
 	json_get_var _updatedAt "updatedAt"
 	_log "提速开始时间: $_updatedAt" $(( 1 | 1 * 4 ))
@@ -172,11 +172,11 @@ isp_bandwidth() {
 	local _up100Expire
 	json_get_var _up100Expire "up100Expire"
 	_log "二类上行带宽$(($_targetUp100 / 1024))M提速截至时间: $_up100Expire" $(( 1 | 1 * 4 ))
-	local _targetDown
-	json_get_var _targetDown "targetDown"	
+	local _download
+	json_get_var _download "download"
 	local _downExpire
 	json_get_var _downExpire "downExpire"
-	_log "下行带宽$(($_targetDown / 1024))M提速截至时间: $_downExpire" $(( 1 | 1 * 4 ))
+	_log "下行带宽${_download}M提速截至时间: $_downExpire" $(( 1 | 1 * 4 ))
 	#50
 	local _upHExpireT
 	json_get_var _upHExpireT "upHExpireT"
@@ -202,7 +202,7 @@ isp_bandwidth() {
 	fi
  	if [ $_downExpireT != "false" -a $_downExpireT -gt $cur_sec ]; then
 		#下行提速
-		local outmsg="下行提速成功，带宽已提升至 $(($_targetDown / 1024))M"; _log "$outmsg" $(( 1 | 1 * 8 ))
+		local outmsg="下行提速成功，带宽已提升至 ${_download}M"; _log "$outmsg" $(( 1 | 1 * 8 ))
 		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
 	else
 		local outmsg="下行未开通"; _log "$outmsg" $(( 1 | 1 * 8 | 32 ))
