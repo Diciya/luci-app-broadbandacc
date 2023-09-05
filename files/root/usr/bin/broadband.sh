@@ -166,12 +166,12 @@ isp_bandwidth() {
 	json_get_var _targetUpH "targetUpH"			
 	local _upHExpire
 	json_get_var _upHExpire "upHExpire"
-	_log "一类上行带宽$(($_targetUpH / 1024))M提速截至时间: $_upHExpire" $(( 1 | 1 * 4 ))
+	_log "一类上行带宽$(expr $_targetUpH / 1024)M提速截至时间: $_upHExpire" $(( 1 | 1 * 4 ))
 	local _targetUp100
 	json_get_var _targetUp100 "targetUp100"			
 	local _up100Expire
 	json_get_var _up100Expire "up100Expire"
-	_log "二类上行带宽$(($_targetUp100 / 1024))M提速截至时间: $_up100Expire" $(( 1 | 1 * 4 ))
+	_log "二类上行带宽$(expr $_targetUp100 / 1024)M提速截至时间: $_up100Expire" $(( 1 | 1 * 4 ))
 	local _download
 	json_get_var _download "download"
 	local _downExpire
@@ -190,11 +190,11 @@ isp_bandwidth() {
 	local cur_sec=`date '+%s'`
  	if [ $_up100ExpireT != "false" -a $_up100ExpireT -gt $cur_sec ]; then
 		#二类上行提速
-		local outmsg="二类上行提速成功，带宽已提升至 $(($_targetUp100 / 1024))M"; _log "$outmsg" $(( 1 | 2 * 8 ))
+		local outmsg="二类上行提速成功，带宽已提升至 $(expr $_targetUp100 / 1024)M"; _log "$outmsg" $(( 1 | 2 * 8 ))
 		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
 	elif [ $_upHExpireT != "false" -a $_upHExpireT -gt $cur_sec ]; then
 		#一类上行提速
-		local outmsg="一类上行提速成功，带宽已提升至 $(($_targetUpH / 1024))M"; _log "$outmsg" $(( 1 | 2 * 8 ))
+		local outmsg="一类上行提速成功，带宽已提升至 $(expr $_targetUpH / 1024)M"; _log "$outmsg" $(( 1 | 2 * 8 ))
 		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
 	else
 		local outmsg="上行未开通"; _log "$outmsg" $(( 1 | 2 * 8 | 32 ))
