@@ -230,7 +230,7 @@ _keepalive() {
   # 接口名称
   network=$(uci -q get "broadband.general.network")
    # 获取出口ip
-  _publicnet_ip=$(wget -qO- $_http_cmd1 | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}' | head -1)
+  _publicnet_ip=$(wget -q -O - $_http_cmd1 | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}' | head -1)
    # 断网睡眠
   if [ -z "$_publicnet_ip" ]; then
     _log "网络断开！请检查接口是否断开"
