@@ -111,7 +111,8 @@ get_bind_ip() {
 # 定义基本 HTTP 命令和参数
 gen_http_cmd() {
 	_http_cmd="https://tisu-api-v3.speedtest.cn/speedUp/query"
-	_http_cmd1="https://api-v3.speedtest.cn/ip"
+	#_http_cmd1="https://api-v3.speedtest.cn/ip" ip查询作废
+ 	_http_cmd1="https://qifu-api.baidubce.com/ip/local/geo/v1/district"
 	_http_cmd2="https://tisu-api.speedtest.cn/api/v2/speedup/reopen"
 	return 1
 }
