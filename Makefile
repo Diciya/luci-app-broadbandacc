@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-broadbandacc
 PKG_VERSION:=3.7
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 PKG_MAINTAINER:=Diciya <484154383@qq.com>
 PKG_LICENSE:=GPLv3
@@ -37,15 +37,6 @@ endef
 define Build/Compile
 endef
 
-define Package/luci-app-broadbandacc/postinst
-#!/bin/sh
-if [ -z "$${IPKG_INSTROOT}" ]; then
-	( . /etc/uci-defaults/luci-app-broadbandacc ) && rm -f /etc/uci-defaults/luci-app-broadbandacc
-	rm -f /tmp/luci-indexcache
-fi
-exit 0
-endef
-
 define Package/luci-app-broadbandacc/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface
@@ -58,7 +49,7 @@ define Package/luci-app-broadbandacc/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/init.d  
 
-	$(INSTALL_BIN) ./files/root/etc/uci-defaults/luci-broadband $(1)/etc/uci-defaults/luci-app-broadbandacc
+	$(INSTALL_BIN) ./files/root/etc/uci-defaults/luci-broadband $(1)/etc/uci-defaults/luci-broadband
 	$(INSTALL_BIN) ./files/root/etc/hotplug.d/iface/99-broadband $(1)/etc/hotplug.d/iface/99-broadband
 	$(INSTALL_DATA) ./files/luci/controller/broadband.lua $(1)/usr/lib/lua/luci/controller/broadband.lua
 	$(INSTALL_DATA) ./files/luci/model/cbi/broadband.lua $(1)/usr/lib/lua/luci/model/cbi/broadband.lua
@@ -70,6 +61,10 @@ define Package/luci-app-broadbandacc/install
 	$(INSTALL_BIN) ./files/root/usr/share/rpcd/acl.d/luci-app-broadband.json $(1)/usr/share/rpcd/acl.d/luci-app-broadband.json
 	$(INSTALL_CONF) ./files/root/etc/config/broadband $(1)/etc/config/broadband
 	$(INSTALL_BIN) ./files/root/etc/init.d/broadband $(1)/etc/init.d/broadband
+endef
+
+define Package/luci-app-broadbandacc/postinst
+
 endef
 
 $(eval $(call BuildPackage,luci-app-broadbandacc))
