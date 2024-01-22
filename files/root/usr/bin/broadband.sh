@@ -334,7 +334,7 @@ broadband_init() {
 	_log "宽带助手正在启动..."
 
 	# 检查外部调用工具
-	command -v wget-ssl >/dev/null || { _log "GNU Wget-ssl 未安装,尝试安装中..."; opkg update; opkg install wget-ssl; }
+	command -v wget-ssl >/dev/null || { _log "GNU Wget-ssl 未安装,尝试安装中...可能需要几分钟"; opkg update; opkg install wget-ssl; }
 	command -v wget-ssl >/dev/null || { _log "GNU Wget-ssl 正在创建软链接"; ln -s /usr/libexec/wget-ssl /usr/bin/wget-ssl; }
 	command -v wget-ssl >/dev/null || { _log "GNU Wget-ssl 安装失败，尝试其他版本或反馈作者修复"; return 3; }
 
