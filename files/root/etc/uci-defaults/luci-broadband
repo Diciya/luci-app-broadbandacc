@@ -18,5 +18,11 @@ if [ "$general"x != "general"x ]; then
 	EOF
 fi
 
+# Set the desired values for the general configuration
+uci set broadband.general.enabled='0'
+uci set broadband.general.logging='0'
+uci set broadband.general.network='wan'
+uci commit broadband
+
 rm -rf /tmp/luci-indexcache /tmp/luci-modulecache
 exit 0
