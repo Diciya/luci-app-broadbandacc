@@ -163,6 +163,7 @@ isp_bandwidth() {
 	local _updatedAt
 	json_get_var _updatedAt "updatedAt"
 	_log "提速开始时间: $_updatedAt" $(( 1 | 1 * 4 ))
+ 	#普通
 	local _targetUpH
 	json_get_var _targetUpH "targetUpH"			
 	local _upHExpire
@@ -178,18 +179,40 @@ isp_bandwidth() {
 	local _downExpire
 	json_get_var _downExpire "downExpire"
 	_log "下行带宽${_download}M提速截至时间: $_downExpire" $(( 1 | 1 * 4 ))
-	#50
+    	#套餐1
+	local _downUp50Expire
+	json_get_var _downUp50Expire "downUp50Expire"
+ 	_log "一类套餐带宽$(expr $_targetUpH / 1024)M上行+${_download}M下行提速截至时间: $_downUp50Expire" $(( 1 | 1 * 4 ))
+ 	#套餐2
+ 	local _downUpExpire
+	json_get_var _downUpExpire "downUpExpire"
+	_log "二类套餐带宽$(expr $_targetUp100 / 1024)M上行+${_download}M下行提速截至时间: $_downUpExpire" $(( 1 | 1 * 4 ))
+ 	#普通
 	local _upHExpireT
+ 	local _up100ExpireT
+  	local _downExpireT
+   	#50
 	json_get_var _upHExpireT "upHExpireT"
 	#100
-	local _up100ExpireT
 	json_get_var _up100ExpireT "up100ExpireT"
 	#500
-	local _downExpireT
 	json_get_var _downExpireT "downExpireT"
+ 	#套餐
+  	local _downUp50ExpireT
+ 	local _downUpExpireT
+   	json_get_var _downUp50ExpireT "downUp50ExpireT"
+    	json_get_var _downUpExpireT "downUpExpireT"
 	#time
 	local cur_sec=`date '+%s'`
- 	if [ $_up100ExpireT != "false" -a $_up100ExpireT -gt $cur_sec ]; then
+  	if [ $_downUpExpireT != "false" -a $_downUpExpireT -gt $cur_sec ]; then
+		#二类套餐上行提速
+		local outmsg="二类套餐上行提速成功，带宽已提升至 $(expr $_targetUp100 / 1024)M"; _log "$outmsg" $(( 1 | 2 * 8 ))
+		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
+ 	elif [ $_downUp50ExpireT != "false" -a $_downUp50ExpireT -gt $cur_sec ]; then
+		#一类套餐上行提速
+		local outmsg="一类套餐上行提速成功，带宽已提升至 $(expr $_targetUpH / 1024)M"; _log "$outmsg" $(( 1 | 2 * 8 ))
+		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
+ 	elif [ $_up100ExpireT != "false" -a $_up100ExpireT -gt $cur_sec ]; then
 		#二类上行提速
 		local outmsg="二类上行提速成功，带宽已提升至 $(expr $_targetUp100 / 1024)M"; _log "$outmsg" $(( 1 | 2 * 8 ))
 		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
@@ -201,7 +224,15 @@ isp_bandwidth() {
 		local outmsg="上行未开通"; _log "$outmsg" $(( 1 | 2 * 8 | 32 ))
 		[ $1 -eq 1 ] && down_acc=0 || up_acc=0
 	fi
- 	if [ $_downExpireT != "false" -a $_downExpireT -gt $cur_sec ]; then
+  	if [ $_downUpExpireT != "false" -a $_downUpExpireT -gt $cur_sec ]; then
+		#二类套餐下行提速
+		local outmsg="二类套餐下行提速成功，带宽已提升至 ${_download}M"; _log "$outmsg" $(( 1 | 1 * 8 ))
+		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
+   	elif [ $_downUp50ExpireT != "false" -a $_downUp50ExpireT -gt $cur_sec ]; then
+		#一类套餐下行提速
+		local outmsg="一类套餐下行提速成功，带宽已提升至 ${_download}M"; _log "$outmsg" $(( 1 | 1 * 8 ))
+		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
+ 	elif [ $_downExpireT != "false" -a $_downExpireT -gt $cur_sec ]; then
 		#下行提速
 		local outmsg="下行提速成功，带宽已提升至 ${_download}M"; _log "$outmsg" $(( 1 | 1 * 8 ))
 		[ $1 -eq 1 ] && down_acc=2 || up_acc=2
